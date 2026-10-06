@@ -45,8 +45,13 @@ public class TaskController {
                 + " page=" + page + " pageSize=" + pageSize
                 + " complexity=" + complexityScore);
 
+        
+        if (page < 1 || pageSize < 1) {
+            return ResponseEntity.badRequest().body(
+              Map.of("error", "page and pageSize must be greater than 0")
+              );
+        }
         List<Task> allResults = taskRepository.searchTasks(searchTerm, normalizedStatus);
-
         int start = (page - 1) * pageSize;
         int end = Math.min(start + pageSize, allResults.size());
         List<Task> pageResults = (start < allResults.size())
